@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git App - User Search</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h4>User keresés</h4>
+    <label for="username">User</label>
+    <input type="text" id="username">
+    <button id="search-btn" class="btn btn-primary">Keresés</button>
+    <div id="results"></div>
+
+    <script src="app.js"></script>
+    <script>
+        function searchUsers(searchText) {
+            fetch("https://api.github.com/search/users?q=" + encodeURIComponent(searchText), {
+                headers: {
+                    'Authorization': 'Bearer ' + GITHUB_ACCESS_TOKEN
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                const resultDiv = document.querySelector('#results');
+                resultDiv.innerHTML = '';
+
+                if (data.items && data.items.length > 0) {
+                    for (const user of data.items) {
+                        fetch(`https://api.github.com/users/${user.login}`, {
+                            headers: {
+                                'Authorization': 'Bearer ' + GITHUB_ACCESS_TOKEN
+                            }
+                        })
+                        .then(userRes => userRes.json())
+                        .then(userDetails => {
+                            const userHtml = `
+                                <div class='card'>
+                                    <a href="${user.html_url}" target="_blank">
+                                        <img src="${user.avatar_url}" alt="${user.login}'s avatar" width="50">
+                                        <h4>${user.login}</h4>
+                                    </a>
+                                    <p>${userDetails.name || 'No name provided'}</p>
+                                    <p>${userDetails.bio || 'No bio available'}</p>
+                                    <p><strong>Followers:</strong> ${userDetails.followers} | <strong>Following:</strong> ${userDetails.following}</p>
+                                    <p><strong>Public Repos:</strong> ${userDetails.public_repos}</p>
+                                </div>`;
+                            resultDiv.innerHTML += userHtml;
+                        });
+                    }
+                } else {
+                    resultDiv.innerHTML = '<p>No users found</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.querySelector('#results').innerHTML = '<p>Error fetching user data</p>';
+            });
+        }
+
+        const searchBtn = document.querySelector('#search-btn');
+        searchBtn.addEventListener('click', () => {
+            const searchText = document.querySelector('#username').value;
+            if (searchText.trim() !== '') {
+                searchUsers(searchText);
+            }
+        });
+
+        document.querySelector('#username').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const searchText = document.querySelector('#username').value;
+                if (searchText.trim() !== '') {
+                    searchUsers(searchText);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
