@@ -1,4 +1,4 @@
-const GITHUB_ACCESS_TOKEN='';
+
 
 function loadNavigation(){
     fetch('nav.html')
