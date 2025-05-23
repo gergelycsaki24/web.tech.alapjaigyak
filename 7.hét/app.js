@@ -1,4 +1,3 @@
-
 function loadNavigation(){
     fetch('nav.html')
     .then(res=> res.text())
