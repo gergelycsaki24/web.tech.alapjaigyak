@@ -1,0 +1,38 @@
+body {
+    font-family: serif;
+    line-height: 1.4;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 15px;
+    color: #000;
+}
+
+h1 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+blockquote {
+    font-style: italic;
+    margin: 1em 0;
+    padding-left: 1em;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+ul {
+    padding-left: 1.5em;
+    margin-top: 0.5em;
+}
+
+h2 {
+    font-size: 1.2em;
+    margin: 1em 0 0.5em 0;
+}
+
+.italic {
+    font-style: italic;
+}
+
